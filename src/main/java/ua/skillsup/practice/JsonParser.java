@@ -1,6 +1,5 @@
 package ua.skillsup.practice;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -53,11 +52,13 @@ public class JsonParser {
         Field[] fields = clazz.getDeclaredFields();
 
         for (Field field : fields) {
+
             field.setAccessible(true);
             String nameField = field.getName();
             if (field.isAnnotationPresent(JsonValue.class)) {
-
                 nameField = field.getAnnotation(JsonValue.class).name();
+                String value = mapField.get(nameField);
+                mapField.put(nameField, value);
             }
 
             if (mapField.containsKey(nameField)) {

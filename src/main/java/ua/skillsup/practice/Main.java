@@ -11,7 +11,7 @@ public class Main {
         human.setFirsName("Ivan");
         human.setLastName("Ivanov");
         human.setHobby("Traveling");
-//        human.setBirthDate(LocalDate.now().minusYears(20));
+        human.setBirthDate(LocalDate.now().minusYears(20));
 
         System.out.println(jsonParser.toJson(human));
         String json = jsonParser.toJson(human);

@@ -7,7 +7,14 @@ public class Human {
     private String lastName;
     @JsonValue(name = "fun")
     private String hobby;
-//    private LocalDate birthDate;
+    private LocalDate birthDate;
+
+
+    public Human() {
+    }
+
+    public Human(String firsName, String lastName, String hobby) {
+    }
 
     public String getFirsName() {
         return firsName;
@@ -33,13 +40,13 @@ public class Human {
         this.hobby = hobby;
     }
 
-//    public LocalDate getBirthDate() {
-//        return birthDate;
-//    }
-//
-//    public void setBirthDate(LocalDate birthDate) {
-//        this.birthDate = birthDate;
-//    }
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
     @Override
     public String toString() {

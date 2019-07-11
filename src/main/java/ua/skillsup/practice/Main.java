@@ -4,7 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException, InstantiationException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
+    public static void main(String[] args)
+            throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException{
         Human human = new Human();
         JsonParser jsonParser = new JsonParser();
 

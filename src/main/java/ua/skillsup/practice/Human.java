@@ -9,13 +9,6 @@ public class Human {
     private String hobby;
     private LocalDate birthDate;
 
-
-    public Human() {
-    }
-
-    public Human(String firsName, String lastName, String hobby) {
-    }
-
     public String getFirsName() {
         return firsName;
     }

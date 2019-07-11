@@ -38,7 +38,8 @@ public class JsonParser {
         return string.toString();
     }
 
-    public <T> T fromJson(String json, Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public <T> T fromJson(String json, Class<T> clazz)
+            throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String[] arrayFieldValue = json.replaceAll("\"", "")
                 .replaceAll("\\{", "")
                 .replaceAll("}", "")

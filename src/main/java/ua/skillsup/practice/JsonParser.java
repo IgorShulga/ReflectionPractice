@@ -2,7 +2,12 @@ package ua.skillsup.practice;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,15 +21,26 @@ public class JsonParser {
 
         for (Field field : fields) {
             field.setAccessible(true);
+
             if (Objects.nonNull(field.get(object))) {
                 String nameField = field.getName();
+                Object valueField = field.get(object);
+
                 if (field.isAnnotationPresent(JsonValue.class)) {
                     nameField = field.getAnnotation(JsonValue.class).name();
                 }
+
+                if (field.isAnnotationPresent(CustomDateFormat.class)) {
+                    String format = field.getAnnotation(CustomDateFormat.class).format();
+                    if (field.get(object) instanceof LocalDate) {
+                        valueField = ((LocalDate) field.get(object)).format(DateTimeFormatter.ofPattern(format));
+                    }
+                }
+
                 string.append("\"")
                         .append(nameField)
                         .append("\":\"")
-                        .append(field.get(object))
+                        .append(valueField)
                         .append("\",");
                 field.setAccessible(false);
             }
@@ -39,7 +55,7 @@ public class JsonParser {
     }
 
     public <T> T fromJson(String json, Class<T> clazz)
-            throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+            throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ParseException, NoSuchFieldException {
         String[] arrayFieldValue = json.replaceAll("\"", "")
                 .replaceAll("\\{", "")
                 .replaceAll("}", "")
@@ -49,6 +65,7 @@ public class JsonParser {
                 .map(s -> s.split(":"))
                 .collect(Collectors.toMap(array -> array[0], array -> array[1]));
 
+
         T object = clazz.getConstructor().newInstance();
         Field[] fields = clazz.getDeclaredFields();
 
@@ -56,18 +73,32 @@ public class JsonParser {
 
             field.setAccessible(true);
             String nameField = field.getName();
+            Object valueField = mapField.get(nameField);
+
             if (field.isAnnotationPresent(JsonValue.class)) {
                 nameField = field.getAnnotation(JsonValue.class).name();
-                String value = mapField.get(nameField);
-                mapField.put(nameField, value);
+                valueField = mapField.get(nameField);
             }
 
             if (mapField.containsKey(nameField)) {
-                String value = mapField.get(nameField);
-                field.set(object, value);
+                if (field.isAnnotationPresent(CustomDateFormat.class)) {
+                    String format = field.getAnnotation(CustomDateFormat.class).format();
+                    LocalDate localDate = deserializeStringToLocaldate(mapField.get(nameField), format);
+                    field.set(object, localDate);
+                } else {
+                    field.set(object, valueField);
+                }
             }
             field.setAccessible(false);
         }
         return object;
+    }
+
+    public LocalDate deserializeStringToLocaldate(String string, String format) throws ParseException {
+        SimpleDateFormat parser = new SimpleDateFormat(format);
+        Date date = parser.parse(string);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String valueField = formatter.format(date);
+        return LocalDate.parse(valueField);
     }
 }

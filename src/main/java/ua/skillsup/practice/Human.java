@@ -10,7 +10,7 @@ public class Human {
     @CustomDateFormat(format = "dd-MM-yyyy")
     private LocalDate birthDate;
 
-//    private LocalDate registrationDate;
+    private LocalDate registrationDate;
 
     public String getFirsName() {
         return firsName;
@@ -44,13 +44,13 @@ public class Human {
         this.birthDate = birthDate;
     }
 
-//    public LocalDate getRegistrationDate() {
-//        return registrationDate;
-//    }
-//
-//    public void setRegistrationDate(LocalDate registrationDate) {
-//        this.registrationDate = registrationDate;
-//    }
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
 
     @Override
     public String toString() {
@@ -59,7 +59,7 @@ public class Human {
                 ", lastName='" + lastName + '\'' +
                 ", hobby='" + hobby + '\'' +
                 ", birthDate=" + birthDate +
-//                ", registrationDate=" + registrationDate +
+                ", registrationDate=" + registrationDate +
                 '}';
     }
 }

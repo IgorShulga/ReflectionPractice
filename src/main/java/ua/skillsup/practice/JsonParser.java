@@ -73,7 +73,7 @@ public class JsonParser {
 
             field.setAccessible(true);
             String nameField = field.getName();
-            Object valueField = mapField.get(nameField);
+            String valueField = mapField.get(nameField);
 
             if (field.isAnnotationPresent(JsonValue.class)) {
                 nameField = field.getAnnotation(JsonValue.class).name();
@@ -83,8 +83,13 @@ public class JsonParser {
             if (mapField.containsKey(nameField)) {
                 if (field.isAnnotationPresent(CustomDateFormat.class)) {
                     String format = field.getAnnotation(CustomDateFormat.class).format();
-                    LocalDate localDate = deserializeStringToLocaldate(mapField.get(nameField), format);
-                    field.set(object, localDate);
+                    String stringDate = deserializeStringToLocaldate(mapField.get(nameField), format);
+                    LocalDate parseDate = LocalDate.parse(stringDate);
+                    field.set(object, parseDate);
+                } else if (field.getType().equals(LocalDate.class)) {
+                    String stringDate = deserializeStringToLocaldate(mapField.get(nameField), "yyyy-MM-dd");
+                    LocalDate parse = LocalDate.parse(stringDate);
+                    field.set(object, parse);
                 } else {
                     field.set(object, valueField);
                 }
@@ -94,11 +99,10 @@ public class JsonParser {
         return object;
     }
 
-    public LocalDate deserializeStringToLocaldate(String string, String format) throws ParseException {
+    public String deserializeStringToLocaldate(String string, String format) throws ParseException {
         SimpleDateFormat parser = new SimpleDateFormat(format);
         Date date = parser.parse(string);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String valueField = formatter.format(date);
-        return LocalDate.parse(valueField);
+        return formatter.format(date);
     }
 }

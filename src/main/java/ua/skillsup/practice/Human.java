@@ -9,7 +9,6 @@ public class Human {
     private String hobby;
     @CustomDateFormat(format = "dd-MM-yyyy")
     private LocalDate birthDate;
-
     private LocalDate registrationDate;
 
     public String getFirsName() {

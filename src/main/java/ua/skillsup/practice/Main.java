@@ -17,8 +17,9 @@ public class Main {
         human.setRegistrationDate(LocalDate.now().minusYears(1));
 
         System.out.println("Source object - " + human);
-        System.out.println("JSON object - " + jsonParser.toJson(human));
         String json = jsonParser.toJson(human);
-        System.out.println("Object from JSON - " + jsonParser.fromJson(json, Human.class));
+        System.out.println("JSON object - " + json);
+        Human humanFromJson = jsonParser.fromJson(json, Human.class);
+        System.out.println(humanFromJson);
     }
 }

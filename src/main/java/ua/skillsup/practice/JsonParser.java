@@ -75,23 +75,26 @@ public class JsonParser {
             String nameField = field.getName();
             String valueField = mapField.get(nameField);
 
-            if (field.isAnnotationPresent(JsonValue.class)) {
-                nameField = field.getAnnotation(JsonValue.class).name();
-                valueField = mapField.get(nameField);
-            }
+            if (Objects.nonNull(nameField)) {
 
-            if (mapField.containsKey(nameField)) {
-                if (field.isAnnotationPresent(CustomDateFormat.class)) {
-                    String format = field.getAnnotation(CustomDateFormat.class).format();
-                    String stringDate = deserializeStringToLocaldate(mapField.get(nameField), format);
-                    LocalDate parseDate = LocalDate.parse(stringDate);
-                    field.set(object, parseDate);
-                } else if (field.getType().equals(LocalDate.class)) {
-                    String stringDate = deserializeStringToLocaldate(mapField.get(nameField), "yyyy-MM-dd");
-                    LocalDate parse = LocalDate.parse(stringDate);
-                    field.set(object, parse);
-                } else {
-                    field.set(object, valueField);
+                if (field.isAnnotationPresent(JsonValue.class)) {
+                    nameField = field.getAnnotation(JsonValue.class).name();
+                    valueField = mapField.get(nameField);
+                }
+
+                if (mapField.containsKey(nameField)) {
+                    if (field.isAnnotationPresent(CustomDateFormat.class)) {
+                        String format = field.getAnnotation(CustomDateFormat.class).format();
+                        String stringDate = deserializeStringToLocaldate(mapField.get(nameField), format);
+                        LocalDate parseDate = LocalDate.parse(stringDate);
+                        field.set(object, parseDate);
+                    } else if (field.getType().equals(LocalDate.class)) {
+                        String stringDate = deserializeStringToLocaldate(mapField.get(nameField), "yyyy-MM-dd");
+                        LocalDate parse = LocalDate.parse(stringDate);
+                        field.set(object, parse);
+                    } else {
+                        field.set(object, valueField);
+                    }
                 }
             }
             field.setAccessible(false);
